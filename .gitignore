@@ -1,3 +1,4 @@
-/data
+/input
 /seti_notebooks/schnaufnet_trained.pth
+/seti_notebooks/logs
 /other_notebooks
