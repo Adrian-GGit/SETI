@@ -244,9 +244,9 @@ class Cadence():
         for image in range(images):
             for i in range(rows - 2*to_add):
                 for j in range(cols - 2*to_add):
-                    current = new_cadence_transformed[image][i:i+kernel_size, j:j+kernel_size]
-                    multiplication = sum(sum(current * kernel))
-                    self.cadence_transformed_f32[image][i, j] = multiplication
+                    current = new_cadence_transformed[image][i:i+kernel_size, j:j+kernel_size] # get for example 3x3 matrix out of image
+                    multiplication = sum(sum(current * kernel)) # weighted addition
+                    self.cadence_transformed_f32[image][i, j] = multiplication # set center where filter on image is to result of weighted addition
 
     def clean_image_columnwise(self) -> np.ndarray: # https://www.kaggle.com/tatamikenn/image-cleaning-column-wise-normalization-knn
         for image in range(self.cadence_transformed_f32.shape[0]):
@@ -487,4 +487,5 @@ class Cadence():
     def cv(self):
         self.convolution_filter(filter_x_sobel)
         self.map_similar_to_one() # reduces noise
+        # self.unify_similar_pixels(0.1)
         self.map_to_proportional_colorscale() # reduces noise
