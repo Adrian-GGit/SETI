@@ -517,6 +517,22 @@ class Cadence():
         cv2.imwrite("sobelx.png", sobelx)
         cv2.imwrite("sobely.png", sobely)
 
+    def conv_filter_cv2(self):
+        images = self.cadence_transformed_f32.shape[0]
+        for image in range(images):
+            print("image: ", image)
+            img = self.cadence_transformed_f32[image]
+            cv2.imwrite("color_img.png", img)
+            img = cv2.imread("color_img.png")
+            gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+            cv2.imwrite('cadence.png', gray_img)
+            gray_img = cv2.imread('cadence.png')
+            prewittx = cv2.filter2D(gray_img, -1, filter_x_prewitt)
+            print("type of new: ", type(prewittx))
+            cv2.imwrite("prewittx.png", prewittx)
+            cv2_np_array_transformed = cv2.imread('prewittx.png', cv2.IMREAD_GRAYSCALE)
+            self.cadence_transformed_f32[image] = cv2_np_array_transformed
+
     def cv(self):
         # self.gradienten_richtung()
         # self.line_detection()
@@ -524,4 +540,11 @@ class Cadence():
         self.map_similar_to_one() # reduces noise
         # self.unify_similar_pixels(0.1)
         self.map_to_proportional_colorscale() # reduces noise
+        self.plot_cadence_for_comparing_differences()
+
+    def cv_with_lib(self):
+        # self.convolution_filter(filter_x_prewitt)
+        self.conv_filter_cv2()
+        # self.map_similar_to_one()
+        # self.map_to_proportional_colorscale()
         self.plot_cadence_for_comparing_differences()
