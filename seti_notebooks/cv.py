@@ -520,7 +520,7 @@ class Cadence():
     def cv(self):
         # self.gradienten_richtung()
         # self.line_detection()
-        self.convolution_filter(filter_x_sobel)
+        self.convolution_filter(filter_x_prewitt)
         self.map_similar_to_one() # reduces noise
         # self.unify_similar_pixels(0.1)
         self.map_to_proportional_colorscale() # reduces noise
