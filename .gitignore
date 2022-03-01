@@ -2,8 +2,8 @@
 /seti_notebooks/schnaufnet_trained.pth
 /seti_notebooks/logs
 /other_notebooks
-/report/*aux
-/report/*dvi
+/report/seti_bericht.aux
+*.dvi
 /report/*.log
 /report/*.toc
 /report/*.synctex.gz
