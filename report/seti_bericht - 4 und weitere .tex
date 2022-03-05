@@ -11,11 +11,11 @@
 \newpage
 
 \section{Imbalance}
-Unter Imbalanced Datasets, also unausgeglichenen Datensätzen, versteht man die Problematik, dass ein Datensatz von einem oder mehreren Labels dominiert wird, während von anderen Labels nur wenige Trainingsdaten zur Verfügung stehen. Das Problem bei Imbalanced Datasets ist, dass das Modell mehr darauf trainiert wird die Labels zu erkennen, welche in den Daten am häufigsten vertreten sind. Die Ursache dafür ist, dass die häufiger vorkommenden Labels auch die Parameter des CNNs entsprechend häufiger beeinflussen und die weniger häufig vorkommenden Labels entsprechend weniger. Es gibt viele Lösungen um dieses Problem zu umgehen, in diesem Kapitel wird insbesondere auf die am meisten robuste und am weitesten verbreitete Lösung eingegangen.
+Unter Imbalanced Datasets, also unausgeglichenen Datensätzen, versteht man die Problematik, dass ein Datensatz von einem oder mehreren Labels dominiert wird, während von anderen Labels nur wenige Trainingsdaten zur Verfügung stehen. Das Problem bei Imbalanced Datasets ist, dass das Modell mehr darauf trainiert wird die Labels zu erkennen, welche in den Daten am häufigsten vertreten sind. Die Ursache dafür ist, dass die häufiger vorkommenden Labels auch die Parameter des CNNs entsprechend häufiger beeinflussen und die weniger häufig vorkommenden Labels entsprechend weniger. Es gibt viele Lösungen um dieses Problem zu umgehen, in diesem Kapitel wird insbesondere auf die am weitesten verbreitete Lösung eingegangen.
 \newline
-Oversampling ist eine hervorragende Lösung um aus einem imbalanced Dataset ein balanced Dataset zu erschaffen. Dabei werden die weniger vorkommenden Labels entsprechend zufällig vervielfacht um ein ausgewogenes Verhältnis zwischen allen Labels zu schaffen. Das genaue Gegenteil von Oversampling ist das Undersampling, wo schlichtweg einfach nur Daten rausgenommen werden von den häufig vorkommenden Labels. Eine andere Strategie setzt bei der Loss-Berechnung an: Die Gewichtung der entsprechenden Labels kann in der Berechnung der Loss-Funktion erhöht werden, wodurch der Loss entsprechend hoch geht bei falscher Vorhersage und somit die Parameter auch entsprechend stark angepasst werden müssen. Der Rest dieses Kapitels fokussiert sich insbesondere auf die Strategie des Oversamplings.
+Oversampling ist eine hervorragende Lösung um aus einem imbalanced Dataset ein balanced Dataset zu erschaffen. Dabei werden die weniger vorkommenden Labels entsprechend zufällig vervielfacht um ein ausgewogenes Verhältnis zwischen allen Labels zu schaffen. Natürlich gibt es noch einige weitere Strategien zum Beispiel das genaue Gegenteil von Oversampling: das Undersampling. Es werden zufällig Daten von den häufig vorkommenden Labels aus dem Datensatz entfernt. Eine andere Strategie setzt bei der Loss-Berechnung an: Die Gewichtung der entsprechenden Labels kann in der Berechnung der Loss-Funktion erhöht werden, wodurch der Loss entsprechend hoch geht bei falscher Vorhersage und somit die Parameter auch entsprechend stark angepasst werden müssen. Der Rest dieses Kapitels fokussiert sich insbesondere auf die Strategie des Oversamplings.
 \newline
-Bei dem SETI Dataset handelt es sich auch um ein Imbalanced Dataset: die Labels mit 0, also "kein Signal", sind zu 90\% vertreten während die Labels mit 1 nur zu 10\% im Dataset vorhanden sind. In Pytorch lässt sich Oversampling mithilfe des "WeightedRandomSampler" recht einfach implementieren:
+Bei dem SETI Dataset handelt es sich um ein Imbalanced Dataset: die Labels mit 0, also "kein Signal", sind zu 90\% vertreten während die Labels mit 1 nur zu 10\% im Dataset vorhanden sind. In Pytorch lässt sich Oversampling mithilfe des "WeightedRandomSampler" recht einfach implementieren:
 \begin{lstlisting}
 labels = np.array(dataset_train.labels)
 class_counts = np.array(
@@ -35,11 +35,19 @@ train_dataloader = DataLoader(
 	batch_size=conf_dict["batch_size"], 
 	sampler=sampler)
 \end{lstlisting}
-Anfangs wird gezählt wie viele Labels jeweils im Dataset vorhanden sind und die Verhältnisse von Gesamtanzahl der Labels zu den einzelnen Vorkommen der Labels wird für jedes einzelne Label berechnet. Die berechneten Zahlen sind die Gewichte der einzelnen Klassen. Diese werden für den "WeightedRandomSampler" benötigt, welcher im "DataLoader" entsprechend dafür sorgt, dass durchschnittlich alle verschiedenen Labels gleich wahrscheinlich für das Training genutzt werden.
-
-TODO: all vs 50-50 vs hybrid
-
-Beim Oversampling muss man aufpassen, dass das Modell nicht übertrainiert wird auf die mehrfach genutzten Daten. Dabei kann uns Dataaugmentation eine Abhilfe leisten.
+Anfangs wird gezählt wie viele Labels jeweils im Dataset vorhanden sind und die Verhältnisse von Gesamtanzahl der Labels zu den einzelnen Vorkommen der Labels wird für jedes einzelne Label berechnet. Die berechneten Zahlen sind die Gewichte der einzelnen Klassen. Diese werden für den "WeightedRandomSampler" benötigt, welcher im "DataLoader" entsprechend dafür sorgt, dass durchschnittlich alle verschiedenen Labels gleich wahrscheinlich für das Training genutzt werden. Der entsprechende Dataloader kann nun für das Training verwendet werden. Im Folgenden wird der reguläre Trainingsansatz mit dem des Oversamplings verglichen und auch mit einer hybriden Variante:
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{img/metrics-acc-recall-prec.png}
+\end{figure}
+Das Training mit dem original Datensatz hat die höchste Accuracy, allerdings auch den geringsten Recall. Das liegt daran, dass das Modell fast nur darauf trainiert wird 0er Labels zu erkennen und hat daher zwar eine hohe Accuracy, dafür aber einen geringen Recall, da es die meisten 1er Labels nicht als solche anerkennt. Die Precision ist dafür aber wieder hoch. Ähnlich verhält es sich mit der hybriden Variante, allerdings ist der Recall etwas höher als bei der original Variante. Das liegt daran, dass überwiegend mit einem ausgeglichenem Datensatz trainiert wurde, wodurch das Modell mehr 1er Labels erkennt. Die gewichtete Variante hängt bei der Accuracy und Precision hinterher, dafür ist der Recall bei dieser Variante am höchsten, da ausschließlich mit einem augeglichenem Datensatz trainiert wurde.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{img/metrics-avgloss-rocauc.png}
+\end{figure}
+Am interessantesten ist der Graph mit dem durchschnittlichen Loss. Sowohl bei der hybriden Variante als auch bei der original Variante ist der Loss recht niedrig gegen Ende der Epochen, während der Loss des Modells mit dem ausgeglichenen Datensatz auch am Ende noch recht hoch ist.
+TODO: wieso ist das so
+Der Roc/Auc Score ist bei allen Varianten gegen Ende fast gleich - der Score der gewichteten Variante ist am höchsten, da das Verhältnis von Recall und Precision besser ist. Abschließend kann man sagen, dass sowohl die Variante mit den original Daten als auch die Variante mit den gewichteten Daten beide Vor- und Nachteile haben. Daher ist die hybride Variante ein guter Kompromiss um die Vorteile beider Varianten auszunutzen. Allerdings muss man beim Oversampling aufgepassen, dass das Modell nicht übertrainiert wird auf die mehrfach genutzten Daten. Dabei kann uns Dataaugmentation weiterhelfen.
 
 TODO: Referenz https://arxiv.org/abs/1710.05381
 
