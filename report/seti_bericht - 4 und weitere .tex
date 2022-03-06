@@ -32,6 +32,9 @@ train_dataloader = DataLoader(
 	sampler=sampler)
 \end{lstlisting}
 Anfangs wird gezählt wie viele Labels jeweils im Dataset vorhanden sind und die Verhältnisse von Gesamtanzahl der Labels zu den einzelnen Vorkommen der Labels wird für jedes einzelne Label berechnet. Die berechneten Zahlen sind die Gewichte der einzelnen Klassen. Diese werden für den "WeightedRandomSampler" benötigt, welcher im "DataLoader" entsprechend dafür sorgt, dass durchschnittlich alle verschiedenen Labels gleich wahrscheinlich für das Training genutzt werden. Der entsprechende Dataloader kann nun für das Training verwendet werden. Im Folgenden wird der reguläre Trainingsansatz mit dem des Oversamplings verglichen und auch mit einer hybriden Variante:
+
+TODO: erklären was mit hybrider Variante gemeint ist und evtl graphen anpassen an "neue" hybride variante
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{metrics-acc-recall-prec.png}
@@ -47,7 +50,7 @@ TODO: stimmt diese Begründung über den Roc/Auc Score?
 
 In den folgenden Diagrammen wurde das efficientnet-b5 genutzt, was einen komplexeren Aufbau als das efficientnet-b1 aufweist und dadurch möglicherweise die Problematik dieser Projektarbeit besser bewältigt.
 
-TODO: Diagramme mit Metriken für efficientnet-b5
+TODO: Diagramme mit Metriken für efficientnet-b5 (10 und 20 Epochs)
 
 Abschließend kann man sagen, dass sowohl die Variante mit den original Daten als auch die Variante mit den gewichteten Daten beide Vor- und Nachteile haben. Daher ist die hybride Variante ein guter Kompromiss um die Vorteile beider Varianten auszunutzen. Allerdings muss man beim Oversampling aufgepassen, dass das Modell nicht übertrainiert wird auf die mehrfach genutzten Daten. Dabei kann uns Dataaugmentation weiterhelfen.
 
