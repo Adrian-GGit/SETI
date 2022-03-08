@@ -328,11 +328,9 @@ class Cadence():
         self.cadence_transformed_f32 = cadence_transformed_deep_copy
 
     def safe_as_cv2_img(self, image_index):
-        test_cadence.map_to_colorscale()
+        # test_cadence.map_to_colorscale()
         img = self.cadence_transformed_f32[image_index]
-        cv2.imwrite('color_img.jpg', img)
-        cv2.imshow("image", img)
-        cv2.waitKey()
+        cv2.imwrite('color_img.png', img)
 
     def cv2_canny(self, lower, upper):
         img = cv2.imread("color_img.jpg", cv2.IMREAD_GRAYSCALE)
@@ -484,8 +482,69 @@ class Cadence():
                             vertical_value = 1000
                     self.cadence_transformed_f32[image][i, j] = vertical_value
 
+    def line_detection(self): # from stackoverflow
+        # img = cv2.imread("test_hough_lines.png")
+        img = cv2.imread("color_img.png")
+        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        kernel_size = 5
+        # blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
+        low_threshold = 40
+        high_threshold = 150
+        # edges = cv2.Canny(gray, low_threshold, high_threshold)
+        # cv2.imwrite("canny_edges.png", edges)
+        rho = 1  # distance resolution in pixels of the Hough grid
+        theta = np.pi / 180  # angular resolution in radians of the Hough grid
+        threshold = 15  # minimum number of votes (intersections in Hough grid cell)
+        min_line_length = 20  # minimum number of pixels making up a line
+        max_line_gap = 20  # maximum gap in pixels between connectable line segments
+        line_image = np.copy(img) * 0  # creating a blank to draw lines on
+        # Run Hough on edge detected image
+        # Output "lines" is an array containing endpoints of detected line segments
+        lines = cv2.HoughLinesP(gray, rho, theta, threshold, np.array([]),
+                            min_line_length, max_line_gap)
+
+        for line in lines:
+            for x1,y1,x2,y2 in line:
+                cv2.line(line_image,(x1,y1),(x2,y2),(255,0,0),5)
+        
+        lines_edges = cv2.addWeighted(img, 0.8, line_image, 1, 0)
+        cv2.imwrite('lines_edges.png', lines_edges)
+
+    def gradienten_richtung(self):
+        img = cv2.imread("color_img.png")
+        sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
+        sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
+        cv2.imwrite("sobelx.png", sobelx)
+        cv2.imwrite("sobely.png", sobely)
+
+    def conv_filter_cv2(self):
+        images = self.cadence_transformed_f32.shape[0]
+        for image in range(images):
+            print("image: ", image)
+            img = self.cadence_transformed_f32[image]
+            cv2.imwrite("color_img.png", img)
+            img = cv2.imread("color_img.png")
+            gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+            cv2.imwrite('cadence.png', gray_img)
+            gray_img = cv2.imread('cadence.png')
+            prewittx = cv2.filter2D(gray_img, -1, filter_x_prewitt)
+            print("type of new: ", type(prewittx))
+            cv2.imwrite("prewittx.png", prewittx)
+            cv2_np_array_transformed = cv2.imread('prewittx.png', cv2.IMREAD_GRAYSCALE)
+            self.cadence_transformed_f32[image] = cv2_np_array_transformed
+
     def cv(self):
-        self.convolution_filter(filter_x_sobel)
+        # self.gradienten_richtung()
+        # self.line_detection()
+        self.convolution_filter(filter_x_prewitt)
         self.map_similar_to_one() # reduces noise
         # self.unify_similar_pixels(0.1)
         self.map_to_proportional_colorscale() # reduces noise
+        self.plot_cadence_for_comparing_differences()
+
+    def cv_with_lib(self):
+        # self.convolution_filter(filter_x_prewitt)
+        self.conv_filter_cv2()
+        # self.map_similar_to_one()
+        # self.map_to_proportional_colorscale()
+        self.plot_cadence_for_comparing_differences()
