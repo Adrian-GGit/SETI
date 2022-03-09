@@ -186,9 +186,11 @@ Die Metriken können nach Abschluss aller Folds gemittelt werden, wodurch man ro
 TODO: Referenz https://medium.com/dataseries/k-fold-cross-validation-with-pytorch-and-sklearn-d094aa00105f
 
 \section{Tech Stack}
-Wir verwenden Jupyter Notebook und kaggle Notebook zur Verwaltung unseres Codes. Ersteres verwenden wir lokal, letzteres kommt zum Einsatz, um Modelle auf den gesamten Trainingsdaten zu trainieren, da kaggle seinen Benutzern jeweils circa 40 Stunden GPU Zeit pro Woche zur Verfügung stellt und wir auf diese Weise die Modelle auf einen schnelleren GPU trainieren konnten, als es uns lokal möglich
+Wir verwenden Jupyter Notebook und kaggle Notebook zur Verwaltung unseres Codes. Ersteres verwenden wir lokal in VS Code für kleinere Experimente und Training auf Subsets der Trainingsdaten. Um Modelle auf den gesamten Trainingsdaten zu trainieren, nutzen wir kaggel Notbekook, da kaggle seinen Benutzern jeweils circa 40 Stunden GPU Zeit pro Woche zur Verfügung stellt und wir auf diese Weise die Modelle auf einer schnelleren GPU trainieren konnten, als es uns lokal möglich ist.
+
+Die wichtigsten Bibliotheken, die zum Einsatz kommen sind pyTorch und numpy. Die Daten für die SETI Challenge liegen als numpy-Arrays vor. Auch die anfänglichen Computer Vision Ansätze wurden direkt auf den numpy-Arrays durchgeführt. Die Bibliothek pyTorch stellt uns die benötigten Werkzeuge für das Erstellen, Trainieren und Validieren des Convolutional Neural Networks bereit.
 
 \section{Fazit}
-
+Insgesamt haben wir durch die Projektarbeit viel neues gelernt. Der Datensatz der SETI Challenge hat sich jedoch als recht schwieriger Datensatz als Einstieg in die Thematik herausgestellt. Problematische Eigenschaften, wie die Unbalanciertheit der Daten und die teilweise komplett im Rauschen versteckten Nadeln, haben jedoch dazu geführt, dass wir uns auch mit einigen Thematiken auseinander setzen mussten, die bei vielen anderen Datensätzen, welche als Einführung in das Thema Deep Learning gedacht sind, nicht relevant sind. Insgesamt haben wir somit also einen umfassenderen Einblick in das Thema bekommen.
 
 \end{document}
