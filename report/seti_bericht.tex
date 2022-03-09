@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{setspace}
+\usepackage{cite}
 
 \begin{document}
 
@@ -16,16 +17,16 @@
 Das Thema Deep Learning gewinnt immer mehr an Bedeutung und die Grundlage für viele Disziplinen, wie etwa Image Classification oder Natural Language Processing. Nachdem wir im Modul Einführung in das Maschinelle Lernen einen ersten, kleinen Einblick in das Thema Deep Learning erhalten hatten, wollten wir uns im Zuge der Projektarbeit praktisches Wissen in diesem Bereich aneignen. Aus denen zur Auswahl stehenden Themen haben wir uns für die kaggle Challenge SETI Breakthrough Listen - E.T. Signal Search entschieden. Da wir in diesem Semester die Vorlesung Computer Vision hören, hatten wir uns erhofft auch Wissen aus dieser Vorlesung in das Projekt einbringen zu können. 
 
 \section{SETI Breakthrough Listen}
-Die kaggle Challenge SETI Breakthrough Listen - E.T. Signal Search war ein öffentlicher Machine Learning Wettbewerb des Berkeley SETI Research Centers im Zeitraum vom 10. Mai 2021 bis 18. August 2021. Die zugrunde liegenden Daten sind noch verfügbar, sodass Interessierte sich nach wie vor mit diesem Problem beschäftigen können. Im folgenden werden wir die Challenge stets abgekürzt als SETI bezeichnen. 
+Die kaggle Challenge SETI Breakthrough Listen - E.T. Signal Search ~\cite{o4} war ein öffentlicher Machine Learning Wettbewerb des Berkeley SETI Research Centers im Zeitraum vom 10. Mai 2021 bis 18. August 2021. Die zugrunde liegenden Daten sind noch verfügbar, sodass Interessierte sich nach wie vor mit diesem Problem beschäftigen können. Im folgenden werden wir die Challenge stets abgekürzt als SETI bezeichnen. 
 
 Die Herausforderung bei SETI besteht darin, Spektrogramme, also eine bildliche Darstellung eines Frequenzbereichs in einem bestimmten Zeitraum, die basierend auf Rohdaten des Green Bank Telescopes generiert worden sind, auf das Vorkommen von künstlich hinzugefügten extraterrestrischen Signalen zu untersuchen. Hierbei ist es wichtig, diese Signale von irdisches Signalen, wie etwa einem Radiosignal, zu unterscheiden. Um diese Unterscheidung vornehmen zu können, sind jeweils sechs Spektrogramme zusammengefasst, wobei die Spektrogramme eins, drei und fünf jeweils Aufnahmen des zu untersuchenden Ziels \glqq A\grqq{} sind und die übrigen jeweils auf Aufnahmen eines anderen Himmelskörpers \glqq B\grqq{}, \glqq C\grqq{} und \glqq D\grqq{}. Eine solche Gruppe von Spektrogrammen (ABACAD) wird bei SETI als Kadenz-Ausschnitt, im folgenden nur noch \glqq Kadenz\grqq{}, bezeichnet.
 
 Abbildung \ref{fig:kadenz_pos_1} zeigt ein Beispiel für eine Kadenz mit einem extraterrestrischen Signal. Auf den drei Spektrogrammen, die auf das Ziel gerichtet sind (in der Abbildung durch \glqq ON\grqq{} gekennzeichnet) ist jeweils ein Signal zu erkennen, welches nicht auf den anderen Spektrogrammen zu sehen ist. Offensichtlich muss ein Signal nicht auf jedem der drei \emph{on target} Spektrogrammen zu sehen sein, da ein Signal nicht zwingend über den gesamten zeitlichen Betrachtungsraum aktiv sein muss.
 
 \begin{figure}[t]
-\centering
-\includegraphics[width=0.9\textwidth]{"img/kadenz_pos_1.png"}
-\caption{Beispiel für eine Kadenz mit Nadel}
+	\centering
+	\includegraphics[width=0.9\textwidth]{"img/kadenz_pos_1.png"}
+	\caption{Beispiel für eine Kadenz mit Nadel}
 \label{fig:kadenz_pos_1}
 \end{figure}
 
@@ -173,7 +174,7 @@ Trainiert man ein Modell, spielt die Lernrate eine große Rolle, gerade wenn es 
 \end{figure}
 Ein sogenannter Scheduler kann die Suche nach einer optimalen Lernrate Abhilfe schaffen. Die Grundidee des Schedulers ist die Lernrate über die Epochen hinweg zu verringern. Je höher die Epoche also je mehr man bereits trainiert hat, desto näher ist man am optimalen Punkt und die Lernrate muss immer weiter verringert werden um diesen Punkt nicht zu verpassen. Dadurch erhält man sowohl Vorteile einer hohen Lernrate als auch die Vorteile einer geringen Lernrate: Anfangs ist die Lernrate noch hoch wodurch man sich dem Optimum schnell nähert, aber je näher man dem Optimum näher kommt, desto geringer wird die Lernrate und man veroasst das Optimum nicht.
 
-TODO: Referenz https://www.deeplearningwizard.com/deep_learning/boosting_models_pytorch/lr_scheduling/
+TODO: Referenz https://www.deeplearningwizard.com/
 
 \subsection{K Fold Cross Validation}
 Wenn man wissen möchte wie gut ein Modell trainiert ist, kann man wie bereits weiter oben erwähnt bestimmte Metriken berechnen lassen, die das Modell bewerten. Dabei kann es rein statistisch gesehen vorkommen, dass das Modell mal besonders schlecht repräsentative Trainingsdaten erhält und somit auf realen Daten schlecht abschneidet. Um robuste Metriken zu berechnen hilft die K Fold Cross Validation. Dabei wird der gesamte Datensatz in k viele Teile unterteilt, wobei es entsprechend k viele Folds gibt. In jedem Fold wird das Modell neu trainiert, allerdings immer wieder mit anderen Trainings- und Validierungsdaten. Die Validierungsdaten beim ersten Fold sind beispielsweise der erste der k Teile, beim zweiten Fold der zweite und so weiter:
@@ -192,5 +193,8 @@ Die wichtigsten Bibliotheken, die zum Einsatz kommen sind pyTorch und numpy. Die
 
 \section{Fazit}
 Insgesamt haben wir durch die Projektarbeit viel neues gelernt. Der Datensatz der SETI Challenge hat sich jedoch als recht schwieriger Datensatz als Einstieg in die Thematik herausgestellt. Problematische Eigenschaften, wie die Unbalanciertheit der Daten und die teilweise komplett im Rauschen versteckten Nadeln, haben jedoch dazu geführt, dass wir uns auch mit einigen Thematiken auseinander setzen mussten, die bei vielen anderen Datensätzen, welche als Einführung in das Thema Deep Learning gedacht sind, nicht relevant sind. Insgesamt haben wir somit also einen umfassenderen Einblick in das Thema bekommen.
+
+\bibliographystyle{alpha}
+\bibliography{literature}
 
 \end{document}
