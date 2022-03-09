@@ -1,8 +1,9 @@
-\documentclass[11pt, a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{setspace}
 
 \begin{document}
 
@@ -11,12 +12,13 @@
 \newpage
 
 \section{Einleitung}
-Hier eine kurze Einleitung in welchem Rahmen diese Arbeit entstanden ist und schonmal ganz kurz auf SETI eingehen.
+\onehalfspacing
+Das Thema Deep Learning gewinnt immer mehr an Bedeutung und die Grundlage für viele Disziplinen, wie etwa Image Classification oder Natural Language Processing. Nachdem wir im Modul Einführung in das Maschinelle Lernen einen ersten, kleinen Einblick in das Thema Deep Learning erhalten hatten, wollten wir uns im Zuge der Projektarbeit praktisches Wissen in diesem Bereich aneignen. Aus denen zur Auswahl stehenden Themen haben wir uns für die kaggle Challenge SETI Breakthrough Listen - E.T. Signal Search entschieden. Da wir in diesem Semester die Vorlesung Computer Vision hören, hatten wir uns erhofft auch Wissen aus dieser Vorlesung in das Projekt einbringen zu können. 
 
 \section{SETI Breakthrough Listen}
 Die kaggle Challenge SETI Breakthrough Listen - E.T. Signal Search war ein öffentlicher Machine Learning Wettbewerb des Berkeley SETI Research Centers im Zeitraum vom 10. Mai 2021 bis 18. August 2021. Die zugrunde liegenden Daten sind noch verfügbar, sodass Interessierte sich nach wie vor mit diesem Problem beschäftigen können. Im folgenden werden wir die Challenge stets abgekürzt als SETI bezeichnen. 
 
-Die Herausforderung bei SETI besteht darin, Spektrogramme, also eine bildliche Darstellung eines Frequenzbereichs in einem bestimmten Zeitraum, die basierend auf Rohdaten des Green Bank Telescopes generiert worden sind, auf das Vorkommen von künstlich hinzugefügten extraterrestrischen Signalen zu untersuchen. Hierbei ist es wichtig, diese Signale von irdisches Signalen, wie etwa einem Radiosignal, zu unterscheiden. Um diese Unterscheidung vornehmen zu können, sind jeweils sechs Spektrogramme zusammengefasst, wobei die Spektrogramme eins, drei und fünf jeweils Aufnahmen des zu untersuchenden Ziels \glqq A\grqq{} sind und die übrigen jeweils auf Aufnahmen eines anderen Himmelskörpers \glqq B\grqq{}, \glqq C\grqq{} und \glqq D\grqq{}. Eine solche Gruppe von Spektrogrammen (ABACAD) wird bei \emph{SETI} als \emph{Kadenz-Ausschnitt}, im folgenden nur noch \glqq Kadenz\grqq{}, bezeichnet.
+Die Herausforderung bei SETI besteht darin, Spektrogramme, also eine bildliche Darstellung eines Frequenzbereichs in einem bestimmten Zeitraum, die basierend auf Rohdaten des Green Bank Telescopes generiert worden sind, auf das Vorkommen von künstlich hinzugefügten extraterrestrischen Signalen zu untersuchen. Hierbei ist es wichtig, diese Signale von irdisches Signalen, wie etwa einem Radiosignal, zu unterscheiden. Um diese Unterscheidung vornehmen zu können, sind jeweils sechs Spektrogramme zusammengefasst, wobei die Spektrogramme eins, drei und fünf jeweils Aufnahmen des zu untersuchenden Ziels \glqq A\grqq{} sind und die übrigen jeweils auf Aufnahmen eines anderen Himmelskörpers \glqq B\grqq{}, \glqq C\grqq{} und \glqq D\grqq{}. Eine solche Gruppe von Spektrogrammen (ABACAD) wird bei SETI als Kadenz-Ausschnitt, im folgenden nur noch \glqq Kadenz\grqq{}, bezeichnet.
 
 Abbildung \ref{fig:kadenz_pos_1} zeigt ein Beispiel für eine Kadenz mit einem extraterrestrischen Signal. Auf den drei Spektrogrammen, die auf das Ziel gerichtet sind (in der Abbildung durch \glqq ON\grqq{} gekennzeichnet) ist jeweils ein Signal zu erkennen, welches nicht auf den anderen Spektrogrammen zu sehen ist. Offensichtlich muss ein Signal nicht auf jedem der drei \emph{on target} Spektrogrammen zu sehen sein, da ein Signal nicht zwingend über den gesamten zeitlichen Betrachtungsraum aktiv sein muss.
 
@@ -27,11 +29,11 @@ Abbildung \ref{fig:kadenz_pos_1} zeigt ein Beispiel für eine Kadenz mit einem e
 \label{fig:kadenz_pos_1}
 \end{figure}
 
-Die Trainingsdaten für \emph{SETI} enthalten 60.000 Kadenzen (\emph{Heuhaufen}) von denen 6.000 \emph{Nadeln} sind, also Kadenzen, die ein künstlich eingefügtes extraterrestrisches Signal enthalten. Einige dieser Signale sind bei entsprechender Visualisierung sofort mit bloßem Auge zu erkennen, andere sind in, durch irdische Signale verursachten, Rauschen versteckt. Weil die Challenge zum Zeitpunkt der Projektarbeit nicht mehr aktiv ist und die zu den Testdaten der Challenge keine Labels verfügbar sind, müssen wir die Trainingsdaten in Trainings- und Testdaten aufteilen, um ein Modell abschließend auf Testdaten laufen lassen zu können. Hierzu führen wir einen 70/30 Split der Trainingsdaten durch und erhalten danach ein Trainingsset mir 42000 Kadenzen und ein Testset mit 18000 Kadenzen. Dieser Split wird durch einen \emph{Seed} reproduzierbar gemacht, um verschiedene Modelle vergleichen zu können, in dem sie auf dem jeweils selben Split der verfügbaren Daten trainiert und getestet werden.
+Die Trainingsdaten für SETI enthalten 60.000 Kadenzen (Heuhaufen) von denen 6.000 Nadeln sind, also Kadenzen, die ein künstlich eingefügtes extraterrestrisches Signal enthalten. Einige dieser Signale sind bei entsprechender Visualisierung sofort mit bloßem Auge zu erkennen, andere sind in, durch irdische Signale verursachten, Rauschen versteckt. Weil die Challenge zum Zeitpunkt der Projektarbeit nicht mehr aktiv ist und die zu den Testdaten der Challenge keine Labels verfügbar sind, müssen wir die Trainingsdaten in Trainings- und Testdaten aufteilen, um ein Modell abschließend auf Testdaten laufen lassen zu können. Hierzu führen wir einen 70/30 Split der Trainingsdaten durch und erhalten danach ein Trainingsset mir 42000 Kadenzen und ein Testset mit 18000 Kadenzen. Dieser Split wird durch einen Seed reproduzierbar gemacht, um verschiedene Modelle vergleichen zu können, in dem sie auf dem jeweils selben Split der verfügbaren Daten trainiert und getestet werden.
 
 
 \section{Implementierung}
-Im folgenden beschäftigen wir uns nun mit der Problemlösung für \emph{SETI}. Wir schauen uns erste Ansätze mit reiner Computer Vision an, die uns helfen sollen auch versteckte Signale extrahieren zu können, um sie mit bloßem Auge erkennen zu können. Wir haben uns für diesen Einstieg entschieden, um ein Gefühl für die visuelle Form der gesuchten Signale und für den Datensatz allgemein zu erhalten. Im darauf folgenden Kapitel werden wir uns mit \emph{Convulutional Neural Networks}, kurz \emph{CNNs}, beschäftigen.
+Im folgenden beschäftigen wir uns nun mit der Problemlösung für SETI. Wir schauen uns erste Ansätze mit reiner Computer Vision an, die uns helfen sollen auch versteckte Signale extrahieren zu können, um sie mit bloßem Auge erkennen zu können. Wir haben uns für diesen Einstieg entschieden, um ein Gefühl für die visuelle Form der gesuchten Signale und für den Datensatz allgemein zu erhalten. Im darauf folgenden Kapitel werden wir uns mit Convulutional Neural Networks, kurz CNNs, beschäftigen.
 
 \subsection{Erste Ansätze mit Computer Vision}
 Wenn man über Bilderkennung spricht denkt man meistens direkt an Machine Learning und Neurale Netzwerke. Allerdings gibt es in der Bilderkennung Problematiken, die sich mithilfe der klassischen Computer Vision deutlich besser lösen lassen. Im Folgenden wird auf die grundlegenden Unterschiede zwischen der klassischen Computervision und Machine Learning eingegangen, einige Grundlagen beschrieben, Lösungen der Computervision angewandt auf die Problematik der Projektarbeit und ob die klassische Computervision für diese Projektarbeit geeignet ist.
@@ -106,13 +108,16 @@ Natürlich wollen wir nicht alle Kadenzen einzeln manuell betrachten und entsche
 \subsection{Das erste Convolutional Neural Network}
 Um uns an den Umgang mit CNNs heranzutasten, entwerfen wir zunächst ein kleines Netz bestehend aus zwei Hidden Layern und einem Fully Connected Layer. Die beiden Hidden Layer bestehen aus je einem Convolutional Layer und einem Pooling Layer. Wir teilen die Trainingsdaten noch einmal mit einem Verhältnis von 90 zu 10 in Trainings- und Validierungsdaten. 
 
-Unsere erste Beobachtung ist, dass wir selbst mit einem so kleinen Netz bereits eine sehr hohe Accuracy erzielen und sich auch der Loss am Anfang deutlich verringert, bis er ein Plateau erreicht. Jedoch ist der Recall sehr schlecht. Diese Konstellation der Metriken lässt sich damit erklären, dass unser CNN nicht wirklich gelernt hat, wie die gesuchten Signale aussehen, sondern einfach die meisten Kadenzen der Klasse 0, also enthält keine Nadel, zuordnet. Aufgrund des sehr unbalancierten Datensatzes, ist diese Klassifizierung offensichtlich sehr oft richtig und somit kommt es zu einem hohen Accuracy Score. Der niedrige Wert beim Recall zeigt jedoch, dass unser Modell die Nadeln nur äußerst selten erkennt. Wir fügen nun weitere Hidden Layer hinzu und spielen viel mit den Werten für die Hyperparameter Kernel Size, Padding und Output Channels. Im Wesentlichen bleibt die Beobachtung jedoch gleich. Das Modell erkennt die Nadeln nur selten.
+Unsere erste Beobachtung ist, dass wir selbst mit einem so kleinen Netz bereits eine sehr hohe Accuracy erzielen und sich auch der Loss am Anfang deutlich verringert, bis er ein Plateau erreicht. Jedoch ist der Recall sehr schlecht. Diese Konstellation der Metriken lässt sich damit erklären, dass unser CNN nicht wirklich gelernt hat, wie die gesuchten Signale aussehen, sondern einfach die meisten Kadenzen der Klasse 0, also enthält keine Nadel, zuordnet. Aufgrund des sehr unbalancierten Datensatzes, ist diese Klassifizierung offensichtlich sehr oft richtig und somit kommt es zu einem hohen Accuracy Score. Diese Metrik scheint daher ohnehin ungeeignet zu Evaluation eines Modells, das auf unbalancierten Daten trainiert und getestet wird. Der niedrige Wert beim Recall zeigt, dass unser Modell die Nadeln nur äußerst selten erkennt. Wir fügen nun weitere Hidden Layer hinzu und spielen viel mit den Werten für die Hyperparameter Kernel Size, Padding und Output Channels. Im Wesentlichen bleibt die Beobachtung jedoch gleich. Das Modell erkennt die Nadeln nur selten.
 
 \subsection{Transfer Learning}
 Wir stehen nun vor der Wahl das eigene CNN weiter auszubauen oder ein vortrainiertes CNN zu verwenden. Beim Transfer Learning wird gewonnenes Wissen aus ähnlichen Aufgaben für die aktuelle Aufgabe genutzt. Für die Klassifizierung von Bildern können wir auf ein vortrainiertes Convolutional Neural Network zurückgreifen, dass beispielsweise bereits auf den Daten von ImageNet, einem riesigen Datensatz mit Millionen von Bildern, trainiert worden ist.
 
 \subsubsection{EfficientNet}
-Wir entscheiden uns EfficientNet als Grundlage für unsere weiteren Versuche zu verwenden. EfficientNet ist ein sehr beliebtes Modell im Bereich der Bildklassifizierung und erzielt auf den ImageNet Daten sehr gute Ergebnisse. PyTorch stellt einige Varianten des EfficientNets bereit und wir trainieren einige dieser Varianten auf den SETI Daten. Das  
+Wir entscheiden uns EfficientNet als Grundlage für unsere weiteren Versuche zu verwenden. EfficientNet ist ein sehr beliebtes Modell im Bereich der Bildklassifizierung und erzielt auf den ImageNet Daten sehr gute Ergebnisse. PyTorch stellt einige Varianten des EfficientNets bereit von denen wir einige Varianten auf den SETI Daten trainieren. Das EfficientNetB5 liefert uns die besten Ergebnisse und wird uns folglich als Grundlage für die weitere Arbeit dienen. Grundlegend bleibt unser Problem mit dem niedrigen Recall jedoch bestehen.
+
+\subsection{ROC AUC Score}
+Bei der SETI Challenge ist als Metrik für die Beurteilung der eingereichten Vorhersagen auf den Testdaten der ROC AUC Score verwendet worden. Um die Performance unseres Modells besser einordnen zu können, nutzen wir ebenfalls den ROC AUC Score. Die ROC Kurve stellt das Verhältnis von der True Positive Rate, also dem Recall, und der True Negative Rate dar. Diese Kurve sollte offensichtlich so weit wie möglich nach links-oben gedrückt sein, was einen hohen Wert bei den korrekt erkannten Nadeln und einen niedrigen Wert für die fälschlicherweise als Nadeln klassifizierten Kadenzen bedeutet. AUC steht für \emph{Area under Curve}, berechnet somit die Fläche unter der ROC Kurve. Je höher dieser Wert, desto mehr ist die Kurve nach links-oben gedrückt und je besser unterscheidet das Modell folglich zwischen den beiden Klassen. 
 
 \subsection{Imbalance}
 Unter Imbalanced Datasets, also unausgeglichenen Datensätzen, versteht man die Problematik, dass mindestens ein Label in einem Datensatz häufiger vertreten ist als andere Labels. Das Problem bei Imbalanced Datasets ist, dass das Modell mehr darauf trainiert wird die häufiger vorkommenden Labels zu erkennen, da entsprechende Labels öfter vom Modell gesehen werden und entsprechend stärker das Modell beeinflussen als andere Labels. Für diese Problematik gibt es einige Lösungsansätze:
@@ -181,7 +186,7 @@ Die Metriken können nach Abschluss aller Folds gemittelt werden, wodurch man ro
 TODO: Referenz https://medium.com/dataseries/k-fold-cross-validation-with-pytorch-and-sklearn-d094aa00105f
 
 \section{Tech Stack}
-Zusammenfassung der verwendeten Tools und Bibliotheken, die teilweise auch vorher im Text schon genannt wurden.
+Wir verwenden Jupyter Notebook und kaggle Notebook zur Verwaltung unseres Codes. Ersteres verwenden wir lokal, letzteres kommt zum Einsatz, um Modelle auf den gesamten Trainingsdaten zu trainieren, da kaggle seinen Benutzern jeweils circa 40 Stunden GPU Zeit pro Woche zur Verfügung stellt und wir auf diese Weise die Modelle auf einen schnelleren GPU trainieren konnten, als es uns lokal möglich
 
 \section{Fazit}
 
